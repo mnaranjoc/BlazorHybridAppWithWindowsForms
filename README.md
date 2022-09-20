@@ -1,9 +1,9 @@
 # Windows Forms Blazor app
-https://learn.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0
+https://learn.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0
 
-## Create a WPF Blazor project
+## Create a WinForms Blazor project
 
- - Type: WPF Application
+ - Type: Windows Forms Application
  - Name: WinFormsBlazor
  - Framework version: .NET 6.0
 
@@ -114,3 +114,46 @@ a, .btn-link {
     top: 0.5rem;
 }
 ```
+
+## Create the Counter App
+
+- Add a  `Counter.razor`  file to the root of the project.
+```
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
+```
+
+ - In **Solution Explorer**, double-click on the `Form1.cs` file to open the designer:
+ - Open the  **Toolbox**  by either selecting the  **Toolbox**  button along the left edge of the Visual Studio window or selecting the **View**  >  **Toolbox**  menu command.
+ - Locate the  `BlazorWebView`  control under `Microsoft.AspNetCore.Components.WebView.WindowsForms`. Drag the `BlazorWebView`  from the  **Toolbox**  into the  `Form1`  designer. Be careful not to accidentally drag a  `WebView2`  control into the form.
+ - In  `Form1`, select the  `BlazorWebView`  (`WebView2`) with a single click.
+ - In the  `BlazorWebView`'s  **Properties**, confirm that the control is named  `blazorWebView1`. If the name isn't  `blazorWebView1`, the wrong control was dragged from the  **Toolbox**. Delete the `WebView2`  control in  `Form1`  and drag the  **`BlazorWebView` control**  into the form.
+ - In the control's properties, change the `BlazorWebView`'s **Dock** value to **Fill**
+ - In the  `Form1`  designer, right-click  `Form1`  and select  **View Code**.
+ - Add namespaces for  `Microsoft.AspNetCore.Components.WebView.WindowsForms`  and  `Microsoft.Extensions.DependencyInjection` to the top of the  `Form1.cs`  file:
+```
+using Microsoft.AspNetCore.Components.WebView.WindowsForms;
+using Microsoft.Extensions.DependencyInjection;
+```
+ - Inside the `Form1` constructor, after the `InitializeComponent()` method call, add the following code:
+```
+var services = new ServiceCollection();
+services.AddWindowsFormsBlazorWebView();
+blazorWebView1.HostPage = "wwwroot\\index.html";
+blazorWebView1.Services = services.BuildServiceProvider();
+blazorWebView1.RootComponents.Add<Counter>("#app");
+```
+
+***Run the app!***
